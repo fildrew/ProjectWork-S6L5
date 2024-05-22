@@ -2,11 +2,8 @@
     <x-slot name="header">
         <div class="flex justify-between">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Events') }}
+                {{ __('Saved Events') }}
             </h2>
-            <div>
-                <a href="{{ route('events.create') }}" class="dark:text-white hover:text-slate-200">New Event</a>
-            </div>
         </div>
     </x-slot>
 
@@ -45,18 +42,8 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex space-x-2">
-                                        <a href="{{ route('events.edit', $event) }}"
-                                            class="text-green-400 hover:text-green-600">Edit</a>
-                                        <form method="POST" class="text-red-400 hover:text-red-600"
-                                            action="{{ route('events.destroy', $event) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <a href="{{ route('events.destroy', $event) }}"
-                                                onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                                                Delete
-                                            </a>
-                                        </form>
+                                        <a href="{{ route('eventShow', $event) }}"
+                                            class="text-green-400 hover:text-green-600">View</a>
                                     </div>
                                 </td>
                             </tr>
