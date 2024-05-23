@@ -3,16 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-
-use App\Http\Controllers\GalleriesController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -36,40 +36,29 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+
+
+    public function activities(): BelongsToMany
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];    
+        return $this->belongsToMany(Activity::class, 'activity_users');
     }
 
-    public function events(): HasMany
+    public function projects(): HasMany
     {
-        return $this->hasMany(Event::class);
+        return $this->HasMany(Project::class, 'owner_id');
     }
 
-    public function galleries(): HasMany
-    {
-        return $this->hasMany(Gallery::class);
-    }
 
-    public function comments(): HasMany
+    public function isAdmin()
     {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function likes(): HasMany
-    {
-        return $this->hasMany(Like::class);
-    }
-
-    public function attendings(): HasMany
-    {
-        return $this->hasMany(Attending::class);
+        return $this->role === 'admin';
     }
 }
